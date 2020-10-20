@@ -1,15 +1,13 @@
 import babel from "@rollup/plugin-babel";
-import serve from "rollup-plugin-serve";
-import cjs from "rollup-plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import mcsssvelte from "@modular-css/svelte";
+import mcssrollup from "@modular-css/rollup";
 import svelte from "rollup-plugin-svelte";
-import globsync from "rollup-plugin-globsync";
-
-// import alias from "./build/alias.js";
-// import aliases from "./build/aliases.js";
+ 
+const { preprocess, processor } = mcsssvelte({ verbose : true });
 
 const watching = process.env.ROLLUP_WATCH;
-
 
 export default {
     input : "./src/application.js",
@@ -17,76 +15,47 @@ export default {
     output : {
         file      : "./dist/bundle.js",
         format    : "iife",
-        name      : "editor",
+        name      : "explosion",
         sourcemap : "inline",
-    },
-
-    onwarn(warning, warn) {
-        const {
-            code = "",
-            id = "",
-            importer = "",
-            pluginCode = "",
-            plugin = "",
-        } = warning;
-
-        // xstate ಠ_ಠ
-        if(code === "THIS_IS_UNDEFINED" && id.includes("\\xstate")) {
-            return;
-        }
-
-        // xstate ಠ_ಠ
-        if(code === "CIRCULAR_DEPENDENCY" && importer.includes("\\xstate")) {
-            return;
-        }
-
-        warn(warning);
     },
 
     plugins : [
         // Play nice with the Node.js ecosystem
         resolve({
-            browser : true,
+            browser : true
         }),
 
-        cjs(),
+        commonjs(),
 
-        // lol so bored
-        svelte(),
+        // Process svelte3 components into JS
+        svelte({
+            preprocess,
+
+            extensions : [ ".svelte" ],
+            css        : false,
+        }),
+
+        // Wire up modular-css to rollup build lifecycle
+        mcssrollup({
+            processor,
+
+            // // Write out JSON representation of selectors in test mode
+            // json : ISTEST,
+
+            // Don't need this, I don't think
+            // meta : false,
+
+            // Don't write out empty files, our GT implementation won't load 'em anyways
+            // empties : false,
+
+            // We never use named exports, so avoid all the "this name isn't a valid JS identifier" warnings
+            // by just disabling them
+            // namedExports : false,
+        }),
 
         // Turns es2015 into ES5
         babel({
             exclude : "node_modules/**",
         }),
-
-        // Environmental transforms for dependencies
-        require("@rollup/plugin-replace")({
-            values : {
-                "process.env.NODE_ENV" : JSON.stringify("production"),
-            },
-            include : "node_modules/**",
-        }),
-
-        // alias(aliases),
-
-        globsync({
-            patterns : [
-                "**/*.svg",
-                "**/*.png",
-                "**/*.jpg",
-                "**/*.mp3",
-                "**/index.html",
-                "**/base.css",
-            ],
-            dest : "./dist",
-
-            options : {
-                transform : (path) => path.replace("src/", ""),
-                clean     : true,
-            },
-        }),
-
-        // Hot-reload blah blah idc.
-        watching && serve("dist"),
     ],
 };
