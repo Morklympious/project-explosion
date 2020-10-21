@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/stffrd/project-explosion#readme",
   "devDependencies": {
+    "@babel/core": "^7.12.3",
     "@modular-css/rollup": "^25.8.2",
     "@modular-css/svelte": "^25.8.2",
     "@rollup/plugin-babel": "^5.2.1",
