@@ -19,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@modular-css/rollup": "^25.8.2",
+    "@modular-css/rollup-rewriter": "^25.8.1",
     "@modular-css/svelte": "^25.8.2",
     "@rollup/plugin-babel": "^5.2.1",
     "@rollup/plugin-commonjs": "^15.1.0",

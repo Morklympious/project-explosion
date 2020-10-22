@@ -14,7 +14,7 @@ export default {
 
     output : {
         file      : "./dist/bundle.js",
-        format    : "iife",
+        format    : "es",
         name      : "explosion",
         sourcemap : "inline",
     },
@@ -38,6 +38,11 @@ export default {
         // Wire up modular-css to rollup build lifecycle
         mcssrollup({
             processor,
+        }),
+
+        require("@modular-css/rollup-rewriter")({
+            loader : `import lazyLoadCSS from "./build/lazyload-css.js";`,
+            loadfn : "lazyLoadCSS",
         }),
 
         // Turns es2015 into ES5
