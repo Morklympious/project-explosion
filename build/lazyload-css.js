@@ -66,4 +66,4 @@ function lazyLoadCSS(src, opts = {}) {
     }));
 };
 
-export default lazyLoadCSS;
+module.exports = lazyLoadCSS;

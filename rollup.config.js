@@ -1,15 +1,6 @@
-import babel from "@rollup/plugin-babel";
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import mcsssvelte from "@modular-css/svelte";
-import mcssrollup from "@modular-css/rollup";
-import svelte from "rollup-plugin-svelte";
- 
-const { preprocess, processor } = mcsssvelte();
+const { preprocess, processor } = require("@modular-css/svelte")();
 
-const watching = process.env.ROLLUP_WATCH;
-
-export default {
+module.exports = {
     input : "./src/application.js",
 
     output : {
@@ -21,34 +12,36 @@ export default {
 
     plugins : [
         // Play nice with the Node.js ecosystem
-        resolve({
-            browser : true
-        }),
+        require("@rollup/plugin-node-resolve").nodeResolve(),
 
-        commonjs(),
+        // Modules -> CommonJS
+        require("@rollup/plugin-commonjs")(),
 
-        // Process svelte3 components into JS
-        svelte({
+        // Svelte 3 -> JS
+        require("rollup-plugin-svelte")({
             preprocess,
-
+            dev        : true,
             extensions : [ ".svelte" ],
             css        : false,
         }),
 
-        // Wire up modular-css to rollup build lifecycle
-        mcssrollup({
+        // Support <link> tags in svelte components
+        require("@modular-css/rollup")({
             processor,
         }),
 
+        // Dynamic imported components -> Lazyload their CSS
         require("@modular-css/rollup-rewriter")({
             loader : `import lazyLoadCSS from "./build/lazyload-css.js";`,
             loadfn : "lazyLoadCSS",
         }),
 
-        // Turns es2015 into ES5
-        babel({
-            exclude : "node_modules/**",
-            babelHelpers: "bundled", 
+        // ES2015 -> ES5
+        require("@rollup/plugin-buble")({
+            // Pretty sure Svelte is outputting for of, so we need this transform.
+            transforms : {
+                dangerousForOf : true,
+            }
         }),
     ],
 };
