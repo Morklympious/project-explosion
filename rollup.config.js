@@ -43,5 +43,7 @@ module.exports = {
                 dangerousForOf : true,
             }
         }),
+
+        require("./build/generate-html.js")(),
     ],
 };
