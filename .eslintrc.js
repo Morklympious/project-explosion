@@ -14,6 +14,17 @@ module.exports = {
         es6     : true,
     },
 
+    plugins : [
+        "svelte3",
+    ],
+
+    overrides : [
+        {
+            files     : [ "*.svelte" ],
+            processor : "svelte3/svelte3",
+        },
+    ],
+
     rules : {
         // Enforce newline consistency in objects
         "object-curly-newline" : [ "warn", {
