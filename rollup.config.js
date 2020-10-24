@@ -1,4 +1,7 @@
+const path = require("path");
 const { preprocess, processor } = require("@modular-css/svelte")();
+
+const watching = process.env.ROLLUP_WATCH;
 
 module.exports = {
     input : "./src/application.js",
@@ -16,6 +19,14 @@ module.exports = {
 
         // Modules -> CommonJS
         require("@rollup/plugin-commonjs")(),
+
+        // Alias magic strings to common folders
+        require("@rollup/plugin-alias")({
+            entries : {
+                components : path.resolve(__dirname, "./src/components"),
+                shared     : path.resolve(__dirname, "./src/shared"),
+            },
+        }),
 
         // Svelte 3 -> JS
         require("rollup-plugin-svelte")({
@@ -36,14 +47,13 @@ module.exports = {
             loadfn : "lazyLoadCSS",
         }),
 
-        // ES2015 -> ES5
-        require("@rollup/plugin-buble")({
-            // Pretty sure Svelte is outputting for of, so we need this transform.
-            transforms : {
-                dangerousForOf : true,
-            }
+        // ES2015 -> ,ES5
+        require("rollup-plugin-babel")({
+            exclude : "node_modules/**",
         }),
 
         require("./build/generate-html.js")(),
+
+        watching && require("rollup-plugin-serve")("dist"),
     ],
 };

@@ -1,8 +1,7 @@
-import Component from "./components/component.svelte";
+import Application from "./application.svelte";
 
-
-new Component({
+new Application({
     target : document.body,
 });
 
-export default Component;
+export default Application;
