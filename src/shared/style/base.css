@@ -1,0 +1,46 @@
+@import "./reset.css";
+@import "./fonts.css";
+
+
+/* HERE BE THE WILDERNESS */
+/* stylelint-disable selector-max-type */
+
+
+html {
+    --ui-scale: 1;
+
+    /* position: fixed is to prevent middle-mouse clicks from being able to scroll things */
+    position: fixed;
+
+    max-height: 100vh;
+    margin: 0;
+
+    font-size: calc((0.5vw + 0.5vh + 0.25vmin) * var(--ui-scale));
+
+    transition: background-color 250ms ease-out;
+
+    font-family: sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+
+    /* Necessary so overflow hidden doesn't hide the F1 menu */
+    width: 100vw;
+    overflow: hidden;
+
+    margin: 0;
+
+    user-select: none;
+
+    color: #F7F4EA
+}
+
+/* stylelint-enable */
+/* We do this everywhere, so might as well define it once */
+.flexc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

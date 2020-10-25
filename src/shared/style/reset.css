@@ -1,0 +1,51 @@
+/* Globally normalize things */
+@import "minireset.css/minireset.css";
+
+/* Style resets specific to environments we care about */
+
+/* stylelint-disable selector-max-type */
+
+/* Reset `button` default styles */
+button {
+    padding: 0;
+    border: 0;
+    overflow: visible;
+
+    background: none;
+    color: inherit;
+
+    font: inherit;
+    line-height: normal;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+/* Disable default button focus style */
+button:focus {
+    outline: 0;
+}
+
+/* Reset all progress bars to NOTHING */
+progress {
+    appearance: none;
+}
+
+/* stylelint-enable */
+
+/* stylelint-disable crucible/defined-colors */
+
+::-webkit-progress-bar {
+    background-color: hsl(0, 0%, 89.02%);
+}
+
+::-webkit-progress-value {
+    background-color: hsl(0, 0%, 76.47%);
+}
+
+/* stylelint-enable */

@@ -1,5 +1,23 @@
 const path = require("path");
-const { preprocess, processor } = require("@modular-css/svelte")();
+
+const ISRELEASE = false;
+
+const { preprocess, processor } = require("@modular-css/svelte")({
+    namer   : ISRELEASE && require("@modular-css/shortnames")(),
+    rewrite : false,
+
+    // Source maps aren't very useful and make the build slow
+    map       : false,
+
+    resolvers : [
+        require("@modular-css/path-aliases")({
+            aliases : {
+                components : path.resolve(__dirname, "./src/components"),
+                shared     : path.resolve(__dirname, "./src/shared"),
+            },
+        }),
+    ],
+});
 
 const watching = process.env.ROLLUP_WATCH;
 
@@ -11,6 +29,9 @@ module.exports = {
         format    : "es",
         name      : "explosion",
         sourcemap : "inline",
+
+        chunkFileNames : "[name].js",
+        assetFileNames : "[name][extname]",
     },
 
     plugins : [
