@@ -14,14 +14,27 @@ module.exports = {
         es6     : true,
     },
 
-    plugins : [
-        "svelte3",
-    ],
-
     overrides : [
         {
-            files     : [ "*.svelte" ],
+            files     : [ "**/*.svelte" ],
             processor : "svelte3/svelte3",
+
+            plugins : [
+                "svelte3",
+            ],
+
+            env : {
+                browser : true,
+            },
+
+            settings : {
+                // ignoring some warnings because we know something eslint doesn't. (it's modular CSS).
+                "svelte3/ignore-warnings" : require("./build/eslint/svelte3-warnings.js"),
+            },
+
+            globals : {
+                css : "readonly",
+            },
         },
     ],
 
@@ -57,6 +70,8 @@ module.exports = {
             maxEOF : 1,
             maxBOF : 0,
         }],
+
+        "missing-declaration" : "off",
 
         "padding-line-between-statements" : [
             "warn",
@@ -119,8 +134,5 @@ module.exports = {
                 message : "isFinite is unsafe, use Number.isFinite",
             },
         ],
-
-        // Require default values for function param object destructure
-        "rulesdir/param-destructure-default" : "error",
     },
 };
